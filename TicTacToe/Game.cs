@@ -51,6 +51,7 @@ namespace TicTacToe
                 _gameEventListener.SetStateText($"Player {GetBoxValue(newState.Player)} won!");
                 _gameEventListener.DisplayAlert("Game completed!");
                 newState.Finished = true;
+                return;
             }
 
             if (CheckForExhaustion())
@@ -58,6 +59,7 @@ namespace TicTacToe
                 _gameEventListener.SetStateText($"All moves exhausted!");
                 _gameEventListener.DisplayAlert("Game completed!");
                 newState.Finished = true;
+                return;
             }
         }
 
@@ -209,29 +211,27 @@ namespace TicTacToe
             var player = state.Player;
             var boxes = state.Boxes;
 
+            var nMasked = 0;
+            var nPlayer = 0;
+
             for (var i = 0; i < boxes.Length; i++)
             {
-                for (int j = 0; j < boxes[i].Length; j++)
+                for (var j = 0; j < boxes[i].Length; j++)
                 {
                     var stateVal = boxes[i][j];
                     var maskVal = mask[i][j];
 
+                    if (maskVal == 1)
+                        nMasked++;
+
                     if (maskVal == 1 && stateVal == player)
                     {
-                        // conforms, do nothing.
-                    }
-                    else if (maskVal == 0 && stateVal != player)
-                    {
-                        // conforms, do nothing.
-                    }
-                    else
-                    {
-                        return false;
+                        nPlayer++;
                     }
                 }
             }
 
-            return true;
+            return nMasked == nPlayer;
         }
     }
 }
